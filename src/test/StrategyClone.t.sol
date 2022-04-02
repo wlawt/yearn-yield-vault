@@ -15,14 +15,7 @@ contract StrategyClone is StrategyFixture {
         vm_std_cheats.assume(_amount > minFuzzAmt && _amount < maxFuzzAmt);
         tip(address(want), user, _amount);
 
-        // uint256 balanceBefore = want.balanceOf(user);
         actions.userDeposit(user, vault, want, _amount);
-
-        // harvest
-        skip(1);
-        vm_std_cheats.prank(strategist);
-        strategy.harvest();
-        assertRelApproxEq(strategy.estimatedTotalAssets(), _amount, DELTA);
 
         vm_std_cheats.prank(strategist);
         Strategy clonedStrategy = Strategy(

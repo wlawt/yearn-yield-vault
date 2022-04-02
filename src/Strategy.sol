@@ -168,9 +168,9 @@ contract Strategy is BaseStrategy {
             getCurrentSupply() < minWantToDeposit,
             "Transfer needs to be above minimum threshold of 100 DAI"
         );
-        uint256 totalAssets = balanceOfWant() + getCurrentSupply();
+        // uint256 totalAssets = balanceOfWant() + getCurrentSupply();
         // Might not work
-        vault.transfer(_newStrategy, totalAssets);
+        // vault.transfer(_newStrategy, totalAssets);
     }
 
     function protectedTokens()
