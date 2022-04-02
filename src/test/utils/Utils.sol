@@ -12,10 +12,11 @@ contract Utils is ExtendedDSTest {
     Vm public constant vm_std_cheats =
         Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
-    function strategyStatus(IVault _vault, Strategy _strategy) public {
+    function strategyStatus(IVault _vault, Strategy _strategy) public view {
         StrategyParams memory status = _vault.strategies(address(_strategy));
-        (uint256 lend, uint256 borrow) = _strategy.getCurrentPosition();
-        uint256 ratio = _strategy.getCurrentCollatRatio();
+        // (uint256 lend, uint256 borrow) = _strategy.getCurrentPosition();
+        uint256 lend = _strategy.getCurrentPosition();
+        // uint256 ratio = _strategy.getCurrentCollatRatio();
 
         console.log("--- Strategy", _strategy.name(), " ---");
         console.log("Performance fee", status.performanceFee);
@@ -27,19 +28,22 @@ contract Utils is ExtendedDSTest {
             "Estimated Total Assets",
             toUnits(_vault, _strategy.estimatedTotalAssets())
         );
+        /*
         console.log(
             "Estimated Total Reward",
             toUnits(_vault, _strategy.estimatedRewardsInWant())
         );
+        */
         console.log(
             "Loose Want",
             toUnits(_vault, _strategy.want().balanceOf(address(_strategy)))
         );
         console.log("Current Lend", toUnits(_vault, lend));
-        console.log("Current Borrow", toUnits(_vault, borrow));
+        // console.log("Current Borrow", toUnits(_vault, borrow));
         // decimals expressed as 5 digit unit
         // 10000 = 1
-        console.log("Current LTV Ratio", (ratio * 10000) / 10**18);
+        // console.log("Current LTV Ratio", (ratio * 10000) / 10**18);
+        /*
         console.log(
             "Target LTV Ratio",
             (_strategy.targetCollatRatio() * 10000) / 10**18
@@ -52,10 +56,12 @@ contract Utils is ExtendedDSTest {
             "Max Borrow LTV Ratio",
             (_strategy.maxBorrowCollatRatio() * 10000) / 10**18
         );
+        */
     }
 
     function toUnits(IVault _vault, uint256 _amount)
         internal
+        view
         returns (uint256)
     {
         return (_amount / (10**_vault.decimals()));

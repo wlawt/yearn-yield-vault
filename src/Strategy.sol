@@ -92,7 +92,7 @@ contract Strategy is BaseStrategy {
         approveMaxSpend(aave, address(UNI_V3_ROUTER));
     }
 
-    function name() external view override returns (string memory) {
+    function name() external pure override returns (string memory) {
         return "StrategyDAIAAVE-Lending";
     }
 
@@ -110,6 +110,8 @@ contract Strategy is BaseStrategy {
             uint256 _debtPayment
         )
     {
+        _debtPayment = _debtOutstanding;
+
         // Claim & sell the rewards;
         _claimAndSellRewards();
 
@@ -145,6 +147,7 @@ contract Strategy is BaseStrategy {
 
     function liquidatePosition(uint256 _amountNeeded)
         internal
+        pure
         override
         returns (uint256 _liquidatedAmount, uint256 _loss)
     {
@@ -153,6 +156,7 @@ contract Strategy is BaseStrategy {
 
     function liquidateAllPositions()
         internal
+        pure
         override
         returns (uint256 _amountFreed)
     {
@@ -171,12 +175,13 @@ contract Strategy is BaseStrategy {
 
     function protectedTokens()
         internal
-        view
+        pure
         override
         returns (address[] memory)
     {
         address[] memory protected = new address[](1);
         protected[0] = aave;
+        return protected;
     }
 
     function ethToWant(uint256 _amtInWei)
@@ -187,7 +192,6 @@ contract Strategy is BaseStrategy {
         returns (uint256)
     {
         // TODO create an accurate price oracle
-        return _amtInWei;
         // weth, _amtInWei
 
         if (_amtInWei == 0) return _amtInWei;
@@ -229,18 +233,27 @@ contract Strategy is BaseStrategy {
         return want.balanceOf(address(this));
     }
 
+    function balanceOfAToken() internal view returns (uint256) {
+        return aToken.balanceOf(address(this));
+    }
+
     function getCurrentSupply() public view returns (uint256 _deposits) {
-        _deposits = aToken.balanceOf(address(this));
+        // _deposits = aToken.balanceOf(address(this));
+        _deposits = balanceOfAToken();
         return _deposits;
     }
 
-    function _claimAndSellRewards() internal returns (uint256) {
+    function _claimAndSellRewards() internal {
         // sell AAVE for want
         // we earn "want" + AAVE (boosted rewards)
         uint256 aaveBalance = IERC20(aave).balanceOf(address(this));
         if (aaveBalance >= minRewardAmountToSell) {
             _sellAAVEForWant(aaveBalance, 0);
         }
+    }
+
+    function getCurrentPosition() public view returns (uint256 deposits) {
+        deposits = balanceOfAToken();
     }
 
     function _sellAAVEForWant(uint256 amountIn, uint256 minOut) internal {

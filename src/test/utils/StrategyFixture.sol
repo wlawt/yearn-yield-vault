@@ -14,7 +14,7 @@ import {Utils} from "./Utils.sol";
 
 // NOTE: if the name of the strat or file changes this needs to be updated
 import {Strategy} from "../../Strategy.sol";
-import {LevAaveFactory} from "../../LevAaveFactory.sol";
+import {DAIAaveFactory} from "../../DAIAaveFactory.sol";
 
 // Artifact paths for deploying from the deps folder, assumes that the command is run from
 // the project root.
@@ -25,8 +25,8 @@ contract StrategyFixture is ExtendedDSTest, stdCheats {
     using SafeERC20 for IERC20;
 
     IVault public vault;
+    DAIAaveFactory public daiAaveFactory;
     Strategy public strategy;
-    LevAaveFactory public levAaveFactory;
     IERC20 public weth;
     IERC20 public want;
 
@@ -105,18 +105,20 @@ contract StrategyFixture is ExtendedDSTest, stdCheats {
         vm_std_cheats.label(keeper, "Keeper");
 
         // Strategy specific labels for tracing
+        /*
         vm_std_cheats.label(
             0x4da27a545c0c5B758a6BA100e3a049001de870f5,
             "stkAave"
         );
+        vm_std_cheats.label(
+            0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F,
+            "sushiv2"
+        );
+        */
         vm_std_cheats.label(0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9, "aave");
         vm_std_cheats.label(
             0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D,
             "univ2"
-        );
-        vm_std_cheats.label(
-            0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F,
-            "sushiv2"
         );
         vm_std_cheats.label(
             0xE592427A0AEce92De3Edee1F18E0157C05861564,
@@ -163,20 +165,17 @@ contract StrategyFixture is ExtendedDSTest, stdCheats {
     }
 
     // @dev Deploys a strategy
-    function deployStrategy() public returns (address) {
-        address _strategy = levAaveFactory.original();
+    function deployStrategy() public view returns (address) {
+        address _strategy = daiAaveFactory.original();
 
         return address(_strategy);
     }
 
-    // @dev Deploys levAaveFactory
-    function deployLevAaveFactory(address _vault)
-        public
-        returns (address _levAaveFactory)
-    {
-        LevAaveFactory _levAaveFactory = new LevAaveFactory(_vault);
+    // @dev Deploys daiAaveFactory
+    function deployDAIAaveFactory(address _vault) public returns (address) {
+        DAIAaveFactory __daiAaveFactory = new DAIAaveFactory(_vault);
 
-        return address(_levAaveFactory);
+        return address(__daiAaveFactory);
     }
 
     // @dev Deploys a vault and strategy attached to vault
@@ -207,7 +206,7 @@ contract StrategyFixture is ExtendedDSTest, stdCheats {
         );
 
         vm_std_cheats.prank(_strategist);
-        levAaveFactory = LevAaveFactory(deployLevAaveFactory(address(vault)));
+        daiAaveFactory = DAIAaveFactory(deployDAIAaveFactory(address(vault)));
 
         vm_std_cheats.prank(_strategist);
         _strategy = deployStrategy();
