@@ -27,7 +27,6 @@ contract StrategyRevokeTest is StrategyFixture {
         assertRelApproxEq(want.balanceOf(address(vault)), _amount, DELTA);
     }
 
-    /*
     function testRevokeStrategyFromStrategy(uint256 _amount) public {
         vm_std_cheats.assume(_amount > minFuzzAmt && _amount < maxFuzzAmt);
         tip(address(want), address(user), _amount);
@@ -36,10 +35,7 @@ contract StrategyRevokeTest is StrategyFixture {
 
         vm_std_cheats.prank(gov);
         strategy.setEmergencyExit();
-        skip(1);
-        vm_std_cheats.prank(gov);
-        strategy.harvest();
-        assertRelApproxEq(want.balanceOf(address(vault)), _amount, DELTA);
+        checks.checkRevokedStrategy(vault, strategy);
     }
 
     function testRevokeWithProfit(uint256 _amount) public {
@@ -58,10 +54,6 @@ contract StrategyRevokeTest is StrategyFixture {
         // Revoke strategy
         vm_std_cheats.prank(gov);
         vault.revokeStrategy(address(strategy));
-        skip(1);
-        vm_std_cheats.prank(gov);
-        strategy.harvest();
         checks.checkRevokedStrategy(vault, strategy);
     }
-    */
 }

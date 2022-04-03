@@ -23,6 +23,17 @@ contract StrategyHarvest is StrategyFixture {
         skip(1);
         vm_std_cheats.prank(strategist);
         strategy.harvest();
+        uint256 totalAssets = strategy.estimatedTotalAssets();
         assertRelApproxEq(strategy.estimatedTotalAssets(), _amount, DELTA);
+
+        uint256 profitAmount = (_amount * 5) / 100;
+        actions.generateProfit(strategy, whale, profitAmount);
+
+        // check that estimatedTotalAssets estimates correctly
+        assertRelApproxEq(
+            strategy.estimatedTotalAssets(),
+            totalAssets + profitAmount,
+            DELTA
+        );
     }
 }

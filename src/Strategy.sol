@@ -252,8 +252,9 @@ contract Strategy is BaseStrategy {
         }
     }
 
-    function getCurrentPosition() public view returns (uint256 deposits) {
-        deposits = balanceOfAToken();
+    function getCurrentPosition() public view returns (uint256) {
+        uint256 deposits = balanceOfAToken();
+        return deposits;
     }
 
     function _sellAAVEForWant(uint256 amountIn, uint256 minOut) internal {

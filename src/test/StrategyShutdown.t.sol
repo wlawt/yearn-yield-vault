@@ -15,17 +15,18 @@ contract StrategyShutdown is StrategyFixture {
         vm_std_cheats.assume(_amount > minFuzzAmt && _amount < maxFuzzAmt);
         tip(address(want), address(user), _amount);
 
-        // Deposit to the vault and harvest
+        // Deposit to the vault
         actions.userDeposit(user, vault, want, _amount);
 
-        // Generate profit
-        uint256 profitAmount = (_amount * 10) / 100;
-        // actions.generateProfit(strategy, whale, profitAmount);
-
+        // Harvest
         skip(1);
         vm_std_cheats.prank(gov);
         strategy.harvest();
-        skip(6 hours);
+        assertRelApproxEq(strategy.estimatedTotalAssets(), _amount, DELTA);
+
+        // Generate profit
+        uint256 profitAmount = (_amount * 10) / 100;
+        actions.generateProfit(strategy, whale, profitAmount);
 
         uint256 totalGain = profitAmount;
         uint256 totalLoss = 0;
