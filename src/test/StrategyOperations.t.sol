@@ -39,43 +39,9 @@ contract StrategyOperationsTest is StrategyFixture {
         assertRelApproxEq(want.balanceOf(address(vault)), _amount, DELTA);
 
         // harvest
-        skip(1);
-        vm_std_cheats.prank(strategist);
-        strategy.harvest();
-        assertRelApproxEq(strategy.estimatedTotalAssets(), _amount, DELTA);
-
-        utils.strategyStatus(vault, strategy);
-
-        // tend()
-        vm_std_cheats.prank(strategist);
-        strategy.tend();
-
-        utils.strategyStatus(vault, strategy);
-
         vm_std_cheats.prank(user);
         vault.withdraw();
         assertRelApproxEq(want.balanceOf(user), balanceBefore, DELTA);
-    }
-
-    /*
-    function testEmergencyExit(uint256 _amount) public {
-        vm_std_cheats.assume(_amount > minFuzzAmt && _amount < maxFuzzAmt);
-        tip(address(want), address(user), _amount);
-
-        // Deposit to the vault
-        actions.userDeposit(user, vault, want, _amount);
-        skip(1);
-        vm_std_cheats.prank(strategist);
-        strategy.harvest();
-        assertRelApproxEq(strategy.estimatedTotalAssets(), _amount, DELTA);
-
-        // set emergency and exit
-        vm_std_cheats.prank(strategist);
-        strategy.setEmergencyExit();
-        skip(1);
-        vm_std_cheats.prank(strategist);
-        strategy.harvest();
-        assertLt(strategy.estimatedTotalAssets(), _amount);
     }
 
     function testSweep(uint256 _amount) public {
@@ -95,19 +61,5 @@ contract StrategyOperationsTest is StrategyFixture {
         vm_std_cheats.prank(gov);
         vm_std_cheats.expectRevert("!shares");
         strategy.sweep(address(vault));
-
-        uint256 beforeBalance = weth.balanceOf(gov) +
-            weth.balanceOf(address(strategy));
-        uint256 wethAmount = 1 ether;
-        tip(address(weth), address(user), wethAmount);
-        // strategy has some weth to pay for flashloans
-        vm_std_cheats.prank(user);
-        weth.transfer(address(strategy), wethAmount);
-        assertNeq(address(weth), address(strategy.want()));
-        assertEq(weth.balanceOf(user), 0);
-        vm_std_cheats.prank(gov);
-        strategy.sweep(address(weth));
-        assertEq(weth.balanceOf(gov), wethAmount + beforeBalance);
     }
-    */
 }
