@@ -1,25 +1,16 @@
-# Yearn Strategy Foundry Mix
+## Yearn vault strategy
 
-## What you'll find here
+A basic concept of using Yearn strategies to generate yield on DAI. As one of my first Solidity projects,
+I wanted to get an understanding of the DeFi ecosystem, and the Yearn docs and GitHub was a good place
+for me to start. The code was forked from [storming0x](https://github.com/storming0x/foundry-yearnV2-gen-lev-lending) and uses the [brownie strategy mix](https://github.com/yearn/brownie-strategy-mix) that the Yearn team put together to use as a template. Additional resources that I used can be found in the resource section below.
 
-- Basic Solidity Smart Contract for creating your own Yearn Strategy ([`Strategy.sol`](src/Strategy.sol))
+## The strategy
 
-- Configured github template with Foundry framework for starting your yearn strategy project.
+The strategy itself is pretty straightforward. A user has some DAI that they want to deposit into the yvDAI vault. The vault has many strategies, one of the strategy is to take the DAI and lend it to Aave through the Aave Lending Pools. The user is able to earn yield from this over time.
 
-- Sample test suite. ([`tests`](src/test/))
+## Next steps
 
-
-## How does it work for the User
-
-Let's say Alice holds 100 DAI and wants to start earning yield % on them.
-
-For this Alice needs to `DAI.approve(vault.address, 100)`.
-
-Then Alice will call `Vault.deposit(100)`.
-
-Vault will then transfer 100 DAI from Alice to itself, and mint Alice the corresponding shares.
-
-Alice can then redeem those shares using `Vault.withdrawAll()` for the corresponding DAI balance (exchanged at `Vault.pricePerShare()`).
+There's a lot that can be added. Some quick thoughts. The DAI can be used as collateral to purchase FXS. The FXS can be locked with Convex in exchange for cvxFXS, which can be deposited into the cvxFXS pool on Curve (~0.98% base + 4.14% boost). The same can be done for rETH (0.96% base + 1.57% boost). However, price action volatility should be considered for lower market-cap assets like Frax when determining the appropriate borrowing ratio. Other options could include the [bean.money](bean.money) protocol where DAI can be swapped for $BEAN, a decentralized credit-based algostable coin (~60% vAPY).
 
 ## Installation and Setup
 
@@ -62,25 +53,6 @@ Run tests with traces (very useful)
 make trace
 ```
 
-## Basic Use
-
-To deploy the demo Yearn Strategy in a development environment:
-
-TODO
-
-## Implementing Strategy Logic
-
-[`contracts/Strategy.sol`](contracts/Strategy.sol) is where you implement your own logic for your strategy. In particular:
-
-- Create a descriptive name for your strategy via `Strategy.name()`.
-- Invest your want tokens via `Strategy.adjustPosition()`.
-- Take profits and report losses via `Strategy.prepareReturn()`.
-- Unwind enough of your position to payback withdrawals via `Strategy.liquidatePosition()`.
-- Unwind all of your positions via `Strategy.exitPosition()`.
-- Fill in a way to estimate the total `want` tokens managed by the strategy via `Strategy.estimatedTotalAssets()`.
-- Migrate all the positions managed by your strategy via `Strategy.prepareMigration()`.
-- Make a list of all position tokens that should be protected against movements via `Strategy.protectedTokens()`.
-
 ## Testing
 
 To run the tests:
@@ -97,10 +69,8 @@ make trace
 
 # Resources
 
-- Yearn [Discord channel](https://discord.com/invite/6PNv2nF/)
-- [Getting help on Foundry](https://github.com/gakonst/foundry#getting-help)
-- [Forge Standard Lib](https://github.com/brockelmore/forge-std)
-- [Awesome Foundry](https://github.com/crisgarner/awesome-foundry)
-- [Foundry Book](https://onbjerg.github.io/foundry-book/index.html)
-- [Learn Foundry Tutorial](https://www.youtube.com/watch?v=Rp_V7bYiTCM)
-
+- [StrategyDAICurve Yearn v1 Vault](https://github.com/yearn/yearn-protocol/blob/develop/contracts/strategies/StrategyDAICurve.sol)
+- [Yearn Vaults](https://vaults.yearn.finance/ethereum/stables)
+- [Article](https://medium.com/yearn-state-of-the-vaults/the-vaults-at-yearn-9237905ffed3) of all the Yearn Vaults
+- [Deploying a new Strategy](https://docs.yearn.finance/developers/v2/DEPLOYMENT)
+- [Foundry Toolkit](https://github.com/gakonst/foundry)

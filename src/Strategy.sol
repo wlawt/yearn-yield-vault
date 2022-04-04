@@ -73,14 +73,6 @@ contract Strategy is BaseStrategy {
         _initializeStrategy();
     }
 
-    /**
-     * @param _vault The address of the Vault responsible for this Strategy.
-     * @param _strategist The address to assign as `strategist`.
-     * The strategist is able to change the reward address
-     * @param _rewards  The address to use for pulling rewards.
-     * @param _keeper The adddress of the _keeper. _keeper
-     * can harvest and tend a strategy.
-     */
     function initialize(
         address _vault,
         address _strategist,
