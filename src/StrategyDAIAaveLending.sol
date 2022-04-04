@@ -1,28 +1,30 @@
 // SPDX-License-Identifier: AGPL-3.0
-
 pragma solidity 0.8.12;
 pragma experimental ABIEncoderV2;
 
 // These are the core Yearn libraries
 import {BaseStrategy} from "@yearnvaults/contracts/BaseStrategy.sol";
 
+// OpenZepplin libraries
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
+// Swap Interfaces
 import "./interfaces/uniswap/IUni.sol";
 import {ISwapRouter} from "./interfaces/uniswap/ISwapRouter.sol";
 
+// Aave Interfaces
 import "./interfaces/aave/ILendingPool.sol";
 import "./interfaces/aave/IAToken.sol";
 import "./interfaces/aave/IProtocolDataProvider.sol";
 
-/*
-    Strategy is supply DAI to AAVE pool to collect yield
-*/
-contract Strategy is BaseStrategy {
+/**
+ * @title StrategyDAIAaveLending
+ * @notice Strategy where a user supplies DAI to the AAVE lending pool to collect yield
+ */
+contract StrategyDAIAaveLending is BaseStrategy {
     using SafeERC20 for IERC20;
     using Address for address;
 
@@ -52,8 +54,8 @@ contract Strategy is BaseStrategy {
     }
     SwapRouter public swapRouter = SwapRouter.UniV3;
 
-    uint256 private DECIMALS;
-    uint16 private constant referralCode = 7; // Yearn's AAVE referral code
+    // Yearn's AAVE referral code
+    uint16 private constant referralCode = 7;
 
     // For deposit and selling minimums
     uint256 public constant minWantToDeposit = 100;
@@ -63,10 +65,22 @@ contract Strategy is BaseStrategy {
     uint24 public constant aaveToWethSwapFee = 3000;
     uint24 public constant wethToWantSwapFee = 3000;
 
+    /**
+     * @dev Constructor
+     * @param _vault The address of the vault that this strategy will use
+     */
     constructor(address _vault) public BaseStrategy(_vault) {
         _initializeStrategy();
     }
 
+    /**
+     * @param _vault The address of the Vault responsible for this Strategy.
+     * @param _strategist The address to assign as `strategist`.
+     * The strategist is able to change the reward address
+     * @param _rewards  The address to use for pulling rewards.
+     * @param _keeper The adddress of the _keeper. _keeper
+     * can harvest and tend a strategy.
+     */
     function initialize(
         address _vault,
         address _strategist,
@@ -93,7 +107,7 @@ contract Strategy is BaseStrategy {
     }
 
     function name() external pure override returns (string memory) {
-        return "StrategyDAIAAVE-Lending";
+        return "StrategyDAIAaveLending";
     }
 
     function estimatedTotalAssets() public view override returns (uint256) {
@@ -168,9 +182,6 @@ contract Strategy is BaseStrategy {
             getCurrentSupply() < minWantToDeposit,
             "Transfer needs to be above minimum threshold of 100 DAI"
         );
-        // uint256 totalAssets = balanceOfWant() + getCurrentSupply();
-        // Might not work
-        // vault.transfer(_newStrategy, totalAssets);
     }
 
     function protectedTokens()
