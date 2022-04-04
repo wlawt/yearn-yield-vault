@@ -21,10 +21,10 @@ import "./interfaces/aave/IAToken.sol";
 import "./interfaces/aave/IProtocolDataProvider.sol";
 
 /**
- * @title StrategyDAIAaveLending
+ * @title Strategy
  * @notice Strategy where a user supplies DAI to the AAVE lending pool to collect yield
  */
-contract StrategyDAIAaveLending is BaseStrategy {
+contract Strategy is BaseStrategy {
     using SafeERC20 for IERC20;
     using Address for address;
 
@@ -202,9 +202,6 @@ contract StrategyDAIAaveLending is BaseStrategy {
         override
         returns (uint256)
     {
-        // TODO create an accurate price oracle
-        // weth, _amtInWei
-
         if (_amtInWei == 0) return _amtInWei;
 
         IUni routerV2 = UNI_V2_ROUTER;
@@ -216,13 +213,7 @@ contract StrategyDAIAaveLending is BaseStrategy {
         return amounts[amounts.length - 1];
     }
 
-    /*
-
-
-            HELPERS
-
-
-    */
+    //////////           HELPERS           //////////
 
     function _depositCollateral(uint256 amount) internal returns (uint256) {
         if (amount == 0) return 0;
@@ -249,7 +240,6 @@ contract StrategyDAIAaveLending is BaseStrategy {
     }
 
     function getCurrentSupply() public view returns (uint256 _deposits) {
-        // _deposits = aToken.balanceOf(address(this));
         _deposits = balanceOfAToken();
         return _deposits;
     }
