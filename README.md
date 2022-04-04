@@ -18,11 +18,7 @@ There's a lot that can be added. Some quick thoughts. The DAI can be used as col
 
 2. Clone repo 
 
-3. Build the project.
-
-```sh
-make build
-```
+3. Build the project `make build`
 
 4. Sign up for [Infura](https://infura.io/) and generate an API key and copy your RPC url. Store it in the `ETH_RPC_URL` environment variable.
 NOTE: you can use other services.
