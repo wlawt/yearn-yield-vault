@@ -40,19 +40,6 @@ NOTE: you can use other services.
   2. Add the values for `ETH_RPC_URL` and other example vars
      NOTE: If you set up a global environment variable, that will take precedence
 
-7. Run tests
-
-NOTE: tests run in fork environment, you need to setup step 6 to be able to run these commands.
-
-```sh
-make test
-```
-Run tests with traces (very useful)
-
-```sh
-make trace
-```
-
 ## Testing
 
 To run the tests:
@@ -67,7 +54,7 @@ to run tests with traces (using console.sol):
 make trace
 ```
 
-# Resources
+## Resources
 
 - [StrategyDAICurve Yearn v1 Vault](https://github.com/yearn/yearn-protocol/blob/develop/contracts/strategies/StrategyDAICurve.sol)
 - [Yearn Vaults](https://vaults.yearn.finance/ethereum/stables)
