@@ -16,29 +16,22 @@ There's a lot that can be added. Some quick thoughts. The DAI can be used as col
 
 1. To install with [Foundry](https://github.com/gakonst/foundry).
 
-2. Fork this repository and create a new repository using it as template. [Create from template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
+2. Clone repo 
 
-3. Clone your newly created repository recursively to include modules.
-
-```sh
-git clone --recursive https://github.com/myuser/foundry-yearn-strategy
-
-cd foundry-yearn-strategy
-```
-
-4. Build the project.
+3. Build the project.
 
 ```sh
 make build
 ```
 
-5. Sign up for [Infura](https://infura.io/) and generate an API key and copy your RPC url. Store it in the `ETH_RPC_URL` environment variable.
+4. Sign up for [Infura](https://infura.io/) and generate an API key and copy your RPC url. Store it in the `ETH_RPC_URL` environment variable.
 NOTE: you can use other services.
 
-6. Use .env file
-  1. Make a copy of `.env.example`
-  2. Add the values for `ETH_RPC_URL` and other example vars
-     NOTE: If you set up a global environment variable, that will take precedence
+5. Make .env file
+
+```
+ETH_RPC_URL={{INSERT_INFURA_RPC_URL}}
+```
 
 ## Testing
 
