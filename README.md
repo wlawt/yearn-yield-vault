@@ -12,6 +12,8 @@ The strategy itself is pretty straightforward. A user has some DAI that they wan
 
 There's a lot that can be added. Some quick thoughts. The DAI can be used as collateral to purchase FXS. The FXS can be locked with Convex in exchange for cvxFXS, which can be deposited into the cvxFXS pool on Curve (~0.98% base + 4.14% boost). The same can be done for rETH (0.96% base + 1.57% boost). However, price action volatility should be considered for lower market-cap assets like Frax when determining the appropriate borrowing ratio. Other options could include the [bean.money](bean.money) protocol where DAI can be swapped for $BEAN, a decentralized credit-based algostable coin (~60% vAPY).
 
+Another idea is launch on Arbitrum, however, yvDAI isn't available on Arbitrum at the moment. Theoretically, another strategy would be to allow users to deposit DAI and then buying DPX to either farm, LP, or participate in SSOV. Obviously, this is more degen and volatile. 
+
 ## Installation and Setup
 
 1. To install with [Foundry](https://github.com/gakonst/foundry).
